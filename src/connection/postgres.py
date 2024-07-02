@@ -1,5 +1,5 @@
 import psycopg2
-from src.settings import db
+from src.settings import settings
 
 
 # connection_temp = psycopg2.connect(dbname='postgres',
@@ -13,17 +13,18 @@ from src.settings import db
 
 def with_connection(f):
     def with_connection_(*args, **kwargs):
-        connection = None
+        # connection = None
         try:
             connection = psycopg2.connect(
-                dbname=db.settings.DB_name,
-                user=db.settings.user_name,
-                password=db.settings.password,
-                host=db.settings.postgres_host,
-                port=db.settings.port)
+                dbname=settings.db.DB_name,
+                user=settings.db.user_name,
+                password=settings.db.password,
+                host=settings.db.postgres_host,
+                port=settings.db.port)
 
             cursor = connection.cursor()
             return_val = f(cursor, *args, **kwargs)
+            connection.commit()
             return return_val
 
         except (Exception, psycopg2.Error) as error:

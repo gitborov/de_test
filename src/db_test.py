@@ -1,5 +1,4 @@
 import psycopg2
-from src.settings import db
 
 try:
     connection = psycopg2.connect(

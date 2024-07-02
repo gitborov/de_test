@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from src.parsing.get_json import get_data
 
+
 class Validate(BaseModel):
     users_gender: str
     users_name_title: str
