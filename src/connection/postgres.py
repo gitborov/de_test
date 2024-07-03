@@ -13,18 +13,19 @@ from src.settings import settings
 
 def with_connection(f):
     def with_connection_(*args, **kwargs):
-        # connection = None
+        connection = None
         try:
             connection = psycopg2.connect(
-                dbname=settings.db.DB_name,
-                user=settings.db.user_name,
-                password=settings.db.password,
-                host=settings.db.postgres_host,
-                port=settings.db.port)
+                dbname=settings.DB,
+                user=settings.USER,
+                password=settings.PASSWORD,
+                host=settings.HOST,
+                port=settings.PORT)
 
             cursor = connection.cursor()
             return_val = f(cursor, *args, **kwargs)
             connection.commit()
+            print('Connection is done')
             return return_val
 
         except (Exception, psycopg2.Error) as error:
@@ -32,6 +33,7 @@ def with_connection(f):
         finally:
             # connection.commit()  # or maybe not
             connection.close()
+            print('Connection is close')
 
 
 
@@ -45,6 +47,6 @@ def with_connection(f):
 #     """
 #     cursor.execute('select * from de_test_schema.users;')
 #     return cursor.fetchall()
-#
-#
+# #
+# #
 # print(r())

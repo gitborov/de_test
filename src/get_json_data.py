@@ -119,4 +119,9 @@ for elem in get_data(url_multy):
 
 #
 # get_multiple_users(url)
-
+def get_validate_data():
+    req = requests.get(url)
+    data_list = []
+    for elem in req.json()['results']:
+        data_list.append(parsing_users(elem))
+    return data_list

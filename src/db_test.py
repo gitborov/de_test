@@ -1,12 +1,15 @@
 import psycopg2
+from src.settings import settings
+from src.connection.postgres import with_connection
 
+connection = None
 try:
     connection = psycopg2.connect(
-        dbname=db.settings.DB_name,
-        user=db.settings.user_name,
-        password=db.settings.password,
-        host=db.settings.postgres_host,
-        port=db.settings.port)
+        dbname=settings.DB,
+        user=settings.USER,
+        password=settings.PASSWORD,
+        host=settings.HOST,
+        port=settings.PORT)
 
     cursor = connection.cursor()
     postgreSQL_select_Query = "select * from de_test_schema.users;"
@@ -32,4 +35,13 @@ finally:
     print("PostgreSQL connection is cloooosed")
 
 
-
+@with_connection
+def r(cursor):
+    """
+    Test function that uses our psycopg2 decorator
+    """
+    cursor.execute('select * from de_test_schema.users;')
+    return cursor.fetchall()
+#
+#
+print(r())

@@ -18,7 +18,8 @@ def main():
 
     # Validate against a password string
     print(schema.validate('validPASS123'))
-    print(schema.validate('invalidPASS'))
+    print(schema.validate('invalidPASS2.'))
+
 
 
 if __name__ == '__main__':

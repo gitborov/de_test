@@ -1,5 +1,5 @@
-__all__ = (
-    "validator",
-)
-
-from password_valid import main as validator
+# __all__ = (
+#     "validator",
+# )
+#
+# from password_valid import check_pass as validator

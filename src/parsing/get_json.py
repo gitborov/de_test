@@ -1,21 +1,19 @@
 import requests
-from src.parsing.parsing_json import parsing_json_data
-
+# from src.parsing.parsing_json import parsing_json_data
+# from src.settings import settings
 url_multy = 'https://randomuser.me/api/?results=5'
 
 
-def get_data(url):
-    '''
-    формирует список словарей
-    '''
-    req = requests.get(url)
-    data_list = []
-    for elem in req.json()['results']:
-        data_list.append(parsing_json_data(elem))
-    return data_list
+def get_data_from_api(url):
+    try:
+        data = requests.get(url)
+        return data.json()
+
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        raise SystemExit(e)
+
+# if __name__ == "__main__":
+#     get_data_from_api()
 
 
-    # try:
-
-if __name__ == "__main__":
-    print(get_data(url_multy))
+# print(get_data_from_api(url_multy))
