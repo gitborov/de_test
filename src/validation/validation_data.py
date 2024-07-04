@@ -41,29 +41,14 @@ class Validate(BaseModel):
     cities_timezone_description: str
 
 
-def validation(data):
+def get_valid_data_from_json(data: dict) -> dict:
+    temp_valid = None
     try:
-        Validate(data)
+        temp_valid = Validate(**(data))
+        return temp_valid.model_dump()
     except ValueError as e:
         print(e)
+        # raise e
 
+    return data
 
-# class User(BaseModel):
-#     password: str
-#     password_validation: bool = False
-#
-#     # @field_validator('password')
-#     # def check_password(cls, v):
-#     #     if not check_pass(v):
-#     #         raise ValueError('Invalid password')
-#     #     return v
-#
-#     @model_validator(mode='after')
-#     def set_password_validation(cls, values):
-#         values.password_validation = check_pass(values.password)
-#         return values
-#
-# test_data = User(
-#     password = 'aaaBBB333'
-# )
-# print(test_data)

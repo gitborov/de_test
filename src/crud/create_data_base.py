@@ -1,18 +1,8 @@
+from src.connection.postgres import with_connection
 
-import psycopg2
-from psycopg2 import Error
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-try:
-    # Подключение к существующей базе данных
-    connection = psycopg2.connect(dbname='postgres',
-                                    user="admin",
-                                  # пароль, который указали при установке PostgreSQL
-                                  password="password",
-                                  host="127.0.0.1",
-                                  port="5433")
-    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    # Курсор для выполнения операций с базой данных
-    cursor = connection.cursor()
+@with_connection
+def create_db(cursor):
+
     sql_create_database = '''
 SET search_path TO DE_test_schema;
     
@@ -26,110 +16,113 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-create table users (
+create table if not exists users (
 	user_id serial primary key, 
-	gender varchar(30),
-	name_title varchar(30),
-	name_first varchar(30),
+	gender varchar(100),
+	name_title varchar(100),
+	name_first varchar(100),
 	age int,
-	nat varchar(10),
+	nat varchar(100),
 	created_dttm timestamp default now()::timestamp,
 	update_dttm timestamp default now()::timestamp
 );
 --триггер, вызывающий функцию при попытке обновления данных
+
+DROP TRIGGER IF EXISTS set_timestamp
+ON users;
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 
-create table contact_details
+create table if not exists contact_details
 	(user_id int primary key references users(user_id),
-	phone varchar(30),
-	cell varchar(30),
+	phone varchar(100),
+	cell varchar(100),
 	created_dttm timestamp default now()::timestamp,
 	update_dttm timestamp default now()::timestamp);
 
+DROP TRIGGER IF EXISTS set_timestamp
+ON contact_details;
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON contact_details
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 
-create table media_data
+create table if not exists media_data
 	(user_id int primary key references users(user_id),
-	picture varchar(60),
+	picture varchar(100),
 	created_dttm timestamp default now()::timestamp,
 	update_dttm timestamp default now()::timestamp);
 
+DROP TRIGGER IF EXISTS set_timestamp
+ON media_data;
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON media_data
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 
-create table registration_data
+create table if not exists registration_data
 	(user_id int primary key references users(user_id),
-	email varchar(30),
-	username varchar (30),
-	"password" varchar(30),
-	password_md5 varchar(50),
+	email varchar(100),
+	username varchar (100),
+	"password" varchar(100),
+	password_md5 varchar(100),
 	password_validation bool,
 	created_dttm timestamp default now()::timestamp,
 	update_dttm timestamp default now()::timestamp);
 
+DROP TRIGGER IF EXISTS set_timestamp
+ON registration_data;
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON registration_data
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 
-create table cities
+create table if not exists cities
 	(city_id serial primary key,
-	city varchar(30),
-	state varchar(30),
-	country varchar(30),
-	timezone_offset  varchar(30),
-	timezone_description  varchar(30),
+	city varchar(100) UNIQUE,
+	state varchar(100),
+	country varchar(100),
+	timezone_offset  varchar(100),
+	timezone_description  varchar(100),
 	created_dttm timestamp default now()::timestamp,
 	update_dttm timestamp default now()::timestamp);
 
+DROP TRIGGER IF EXISTS set_timestamp
+ON cities;
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON cities
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 ;
 
-create table locations 
+create table if not exists locations 
 	(user_id int primary key references users(user_id),
 	city_id int references cities(city_id),
-	street_name varchar(30),
+	street_name varchar(100),
 	street_number int,
-	postcode varchar(30),
+	postcode varchar(100),
 	latitude float8,
 	longitude float8,
 	created_dttm timestamp default now()::timestamp,
 	update_dttm timestamp default now()::timestamp);
 
+DROP TRIGGER IF EXISTS set_timestamp
+ON locations;
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON locations
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
-create table test_table
-	(id int primary key references users(user_id),
-	some_shit varchar(30),
-	some_shit2 varchar(30)
-	);
 	'''
+
     cursor.execute(sql_create_database)
-    print("Таблицы PostgreSQL успешно построены")
-    # sql_create_scheme = '''CREATE SCHEMA IF NOT EXISTS DE_test_schema'''
-    # cursor.execute(sql_create_scheme)
-except (Exception, Error) as error:
-    print("Ошибка при работе с PostgreSQL", error)
-finally:
-    if connection:
-        cursor.close()
-        connection.close()
-        print("Соединение с PostgreSQL закрыто")
+    # return cursor.fetchall()
+
+
+print(create_db())

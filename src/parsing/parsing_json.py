@@ -2,6 +2,7 @@ from  src.parsing.get_json import get_data_from_api
 from src.validation.validation_data import Validate
 import json
 url_multy = 'https://randomuser.me/api/?results=1'
+url_valid_pass = 'https://randomuser.me/api/?results=1&password=special,upper,lower,number'
 
 def parsing_json_data(data):
     '''функция принимает словарь с данными одного пользователя
@@ -43,14 +44,15 @@ def parsing_json_data(data):
     return data_dict
 
 
-data = get_data_from_api(url_multy)['results'][0]
+# data = get_data_from_api(url_multy)['results'][0]
+data = get_data_from_api(url_valid_pass)['results'][0]
 
 
 def get_valid_data_from_json(data):
     temp_valid = None
     try:
         temp_valid = Validate(**parsing_json_data(data))
-        return parsing_json_data(data)
+        return temp_valid.model_dump()
     except ValueError as e:
         print(e)
         # raise e
@@ -101,5 +103,32 @@ def get_registration_data(data, user_id):
     return registration_data_dict
 
 
+def get_cities_data(data):
+    cities_data_dict = {
+        'city': data.get('cities_city'),
+        'state': data.get('cities_state'),
+        'country': data.get('cities_country'),
+        'timezone_offset': data.get('cities_timezone_offset'),
+        'timezone_description': data.get('cities_timezone_description')
+    }
+    return cities_data_dict
+
+
+def get_locations_data(data, user_id, city_id):
+    locations_data_dict = {
+        'user_id': user_id,
+        'city_id': city_id,
+        'street_name': data.get('location_street_name'),
+        'street_number': data.get('location_street_number'),
+        'postcode': data.get('location_postcode'),
+        'latitude': data.get('location_latitude'),
+        'longitude': data.get('location_longitude')
+    }
+    return locations_data_dict
+
 
 valid_data = get_valid_data_from_json(data)
+
+
+# print(Validate(**parsing_json_data(data)).model_dump())
+# print(get_registration_data(valid_data, 1))
