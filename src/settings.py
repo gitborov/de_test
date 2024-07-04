@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     USER: str
     PASSWORD: str
     PORT: int
-
+    SCHEME: str
 
 settings = Settings()
 

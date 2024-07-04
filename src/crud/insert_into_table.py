@@ -1,75 +1,11 @@
 import psycopg2
 from src.connection.postgres import with_connection
-from src.parsing.parsing_json import (get_users_data,
-									  valid_data,
+from src.parsing.get_valid_data import (get_users_data,
 									  get_contact_details,
 									  get_cities_data,
 									  get_locations_data,
 									  get_media_data,
 									  get_registration_data)
-
-url = 'https://randomuser.me/api/'
-
-
-# url_multy = 'https://randomuser.me/api/?results=5'
-
-
-#
-# try:
-# 	connection = psycopg2.connect(dbname='postgres',
-# 								  user="admin",
-# 								  password="password",
-# 								  host="127.0.0.1",
-# 								  port="5433")
-# 	cursor = connection.cursor()
-#
-# 	users_insert_query = f"""
-# 		insert into de_test_schema.users (gender, name_title, name_first, age, nat)
-# 		VALUES (%s,%s,%s,%s,%s)
-# 		returning user_id
-# 	"""
-#
-# 	cursor.execute(users_insert_query, get_data(url)[0]['users'])
-# 	user_id = cursor.fetchall()[0][0]
-#
-# 	# print(get_data(url)[0]['contact_details'])
-# 	# print(user_id)
-# 	# print(get_data(url)[0]['contact_details'].insert(0, user_id))
-# 	# print(list(user_id) + get_data(url)[0]['contact_details'])
-#
-# 	# contact_insert_query = f"""
-# 	# 	insert into de_test_schema.contact_details (user_id, phone, cell)
-# 	# 	VALUES (%s,%s,%s)"""
-# 	# cursor.fetchall() Возвращает список с кортежем, в котором хранится id записи
-# 	# cursor.execute(contact_insert_query, get_data(url)[0]['contact_details'].insert(0, cursor.fetchall()[0][0]))
-#
-# 	connection.commit()
-#
-#
-# 	print("Record inserted successfully \
-# 	into users table")
-#
-# except (Exception, psycopg2.Error) as error:
-# 	print("Failed to insert record into users table", error)
-#
-# finally:
-# 	# closing database connection.
-# 	if connection:
-# 		cursor.close()
-# 		connection.close()
-# 		print("PostgreSQL connection is closed")
-
-
-# @with_connection
-# def insert_into_table(cursor, data):
-# 	users_insert_query = f"""
-# 		insert into de_test_schema.users (gender, name_title, name_first, age, nat)
-# 		VALUES (%s,%s,%s,%s,%s)
-# 		returning user_id
-# 	"""
-#
-# 	cursor.execute(users_insert_query, data)
-# 	return cursor.fetchall()
 
 
 class PrepareForQuery:
@@ -90,7 +26,7 @@ class PrepareForQuery:
 
 
 @with_connection
-def insert_data(cursor, data, scheme_name):
+def insert_data(cursor, data: dict, scheme_name: str):
 
 	users_data = PrepareForQuery(get_users_data(data))
 	users_insert_query = f'''
@@ -122,21 +58,16 @@ def insert_data(cursor, data, scheme_name):
 		returning *'''
 	cursor.execute(registration_insert_query, registration_data.get_values())
 
-	temp_registration = cursor.fetchall()
-	print(temp_registration)
-	try:
-		cities_data = PrepareForQuery(get_cities_data(data))
-		cities_insert_query = f'''
-			insert into {scheme_name}.cities {cities_data.get_columns()}
-			values ({cities_data.get_s_string()})
-			returning city_id'''
-		cursor.execute(cities_insert_query, cities_data.get_values())
 
-		city_id = cursor.fetchall()[0][0]
-	except:
-		q = (f'''select city_id from {scheme_name}.cities
-				where '''
-			 )
+	cities_data = PrepareForQuery(get_cities_data(data))
+	cities_insert_query = f'''
+		insert into {scheme_name}.cities {cities_data.get_columns()}
+		values ({cities_data.get_s_string()})
+		returning city_id'''
+	cursor.execute(cities_insert_query, cities_data.get_values())
+
+	city_id = cursor.fetchall()[0][0]
+
 
 
 	locations_data = PrepareForQuery(get_locations_data(data, user_id,  city_id))
@@ -146,11 +77,11 @@ def insert_data(cursor, data, scheme_name):
 		returning user_id'''
 	cursor.execute(locations_insert_query, locations_data.get_values())
 
-	return print(cursor.fetchall())
 
 
-insert_data(data=valid_data, scheme_name='de_test_schema')
-# print(get_users_data(valid_data))
-print(get_cities_data(valid_data))
+
+# insert_data(data=valid_data, scheme_name='de_test_schema')
+# # print(get_users_data(valid_data))
+# print(get_cities_data(valid_data))
 
 

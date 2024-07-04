@@ -1,3 +1,8 @@
+from src.loging.configure_logging import configure_logging
+
+logger = configure_logging(r'C:\Users\SM\PycharmProjects\testing_de\logg.log')
+
+
 def get_users_data(data):
     users_dict = {
         'gender': data.get('users_gender'),
@@ -6,6 +11,7 @@ def get_users_data(data):
         'age': data.get('users_age'),
         'nat': data.get('users_nat')
     }
+    logger.debug('Retrieved data from users successfully')
     return users_dict
 
 
@@ -15,6 +21,7 @@ def get_contact_details(data, user_id):
         'phone': data.get('contact_phone'),
         'cell': data.get('contact_cell')
     }
+    logger.debug('Retrieved data from contact details successfully')
     return contact_details_dict
 
 
@@ -23,6 +30,7 @@ def get_media_data(data, user_id):
         'user_id': user_id,
         'picture': data.get('media_picture')
     }
+    logger.debug('Retrieved data from media data successfully')
     return media_data_dict
 
 
@@ -35,6 +43,7 @@ def get_registration_data(data, user_id):
         'password_md5': data.get('registration_password_md5'),
         'password_validation': data.get('registration_password_validation')
     }
+    logger.debug('Retrieved data from registration data successfully')
     return registration_data_dict
 
 
@@ -46,6 +55,7 @@ def get_cities_data(data):
         'timezone_offset': data.get('cities_timezone_offset'),
         'timezone_description': data.get('cities_timezone_description')
     }
+    logger.debug('Retrieved data from cities data successfully')
     return cities_data_dict
 
 
@@ -59,4 +69,5 @@ def get_locations_data(data, user_id, city_id):
         'latitude': data.get('location_latitude'),
         'longitude': data.get('location_longitude')
     }
+    logger.debug('Retrieved data from locations data successfully')
     return locations_data_dict
