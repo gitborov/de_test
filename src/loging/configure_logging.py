@@ -1,7 +1,9 @@
 import logging
+import os
+
 
 def configure_logging(log_file_path):
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(os.path.basename(__name__))
     logger.setLevel(logging.DEBUG)
 
     # Создание обработчика для файла

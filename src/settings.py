@@ -4,9 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        # env_file=("../.env.dev", "../src/.env.secret"),
-        env_file=("C:\\Users\\SM\\PycharmProjects\\testing_de\\.env.dev", "../src/.env.secret"),
-        env_file_encoding="utf-8",
+        env_file=("../.env.dev", "../src/.env.secret"),
+        # env_file=("C:\\Users\\SM\\PycharmProjects\\testing_de\\.env.dev", "../src/.env.secret"),
+        env_file_encoding="utf-8"
     )
 
     URL: str
@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     PASSWORD: str
     PORT: int
     SCHEME: str
+
+    # LOG_PATH: str
 
 settings = Settings()
 

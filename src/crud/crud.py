@@ -19,7 +19,7 @@ def insert_data(cur, table_name, columns, values):
     cur.execute(insert_query, values)
 
 @with_connection
-def read_data(cur, table_name):
+def read_data(cur, schema_name, table_name):
     select_query = 'SELECT * FROM {}'.format(table_name)
     cur.execute(select_query)
     rows = cur.fetchall()

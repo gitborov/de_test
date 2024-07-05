@@ -10,7 +10,6 @@ from src.settings import settings
 #                               port="5433")
 
 
-
 def with_connection(f):
     def with_connection_(*args, **kwargs):
         connection = None
@@ -25,17 +24,14 @@ def with_connection(f):
             cursor = connection.cursor()
             return_val = f(cursor, *args, **kwargs)
             connection.commit()
-            print('Connection is done')
+            # print('Connection is done')
             return return_val
 
         except (Exception, psycopg2.Error) as error:
             print("Error while fetching data from PostgreSQL", error)
         finally:
-            # connection.commit()  # or maybe not
             connection.close()
-            print('Connection is close')
-
-
+            # print('Connection is close')
 
     return with_connection_
 

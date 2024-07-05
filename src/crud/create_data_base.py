@@ -119,6 +119,29 @@ BEFORE UPDATE ON locations
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
+create table if not exists invalid_data (
+	user_id serial primary key, 
+	gender varchar(100),
+	name_title varchar(100),
+	name_first varchar(100),
+	age int,
+	nat varchar(100),
+    phone varchar(100),
+    cell varchar(100),
+    picture varchar(100),
+    email varchar(100),
+    username varchar (100),
+    "password" varchar(100),
+    password_md5 varchar(100),
+    password_validation bool,
+    street_name varchar(100),
+    street_number int,
+    postcode varchar(100),
+    latitude float8,
+    longitude float8,
+    timezone_offset  varchar(100),
+    timezone_description  varchar(100),
+    created_dttm timestamp default now()::timestamp);
 	'''
 
     cursor.execute(sql_create_database)

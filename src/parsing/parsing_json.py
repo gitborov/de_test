@@ -1,7 +1,7 @@
 from  src.parsing.get_json import get_data_from_api
 from src.loging.configure_logging import configure_logging
 
-logger = configure_logging(r'C:\Users\SM\PycharmProjects\testing_de\logg.log')
+# logger = configure_logging(r'C:\Users\SM\PycharmProjects\testing_de\logg.log')
 
 
 def parsing_json_data(data: dict) -> dict:
@@ -40,7 +40,7 @@ def parsing_json_data(data: dict) -> dict:
         'cities_timezone_offset': data['location']['timezone']['offset'],
         'cities_timezone_description': data['location']['timezone']['description'],
     }
-    logger.info('Data parsed successfully')
+    # logger.info('Data parsed successfully')
     return data_dict
 
 
