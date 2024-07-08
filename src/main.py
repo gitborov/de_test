@@ -1,8 +1,11 @@
-from src.crud.multiple_insert import multiple_insert
+from src.call.work_with_data import DataWork
 from src.settings import settings
 
+
 def main():
-    multiple_insert(settings)
+    obj = DataWork(settings)
+    obj.insert_data(2)
+    obj.read_data(flag=True)
 
 
 if __name__ == '__main__':

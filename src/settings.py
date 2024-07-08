@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     )
 
     URL: str
-    NUM_PAGE: int
+    # NUM_PAGE: int
 
     HOST: str
     DB: str

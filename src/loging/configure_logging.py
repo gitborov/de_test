@@ -9,6 +9,7 @@ def configure_logging(log_file_path):
     # Создание обработчика для файла
     file_handler = logging.FileHandler(log_file_path)
     file_handler.setLevel(logging.INFO)
+
     console_out = logging.StreamHandler()
     console_out.setLevel(logging.DEBUG)
     # Создание форматтера для логгирования

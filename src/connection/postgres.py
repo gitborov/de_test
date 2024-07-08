@@ -29,6 +29,7 @@ def with_connection(f):
 
         except (Exception, psycopg2.Error) as error:
             print("Error while fetching data from PostgreSQL", error)
+            # raise error
         finally:
             connection.close()
             # print('Connection is close')
